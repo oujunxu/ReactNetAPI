@@ -11,7 +11,7 @@ namespace ReactNetAPI.Data.DataAccess
     {
 
 
-        public static string GetConnectionString(string Id = "anders", string password = "anders96")
+        public static string GetConnectionString(string Id = "", string password = "")
         {
             string connectionString = $"Server=XUOUJUN\\SQLEXPRESS;Database=GenshinDB;Trusted_Connection=false;User id = {Id}; password={password};MultipleActiveResultSets=true";
             
@@ -31,6 +31,14 @@ namespace ReactNetAPI.Data.DataAccess
             using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
             {
                 return cnn.Execute(sql, data);
+            }
+        }
+
+        public static List<T> UpdateData<T>(string sql, T data)
+        {
+            using (IDbConnection cnn = new SqlConnection(GetConnectionString()))
+            {
+                return cnn.Query<T>(sql, data).ToList();
             }
         }
     }

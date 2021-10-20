@@ -50,6 +50,29 @@ namespace ReactNetAPI.Data.BusinessLogic
 
             return SQLDataAccess.LoadData<CharacterModel>(sql);
         }
+
+        public static List<CharacterModel> UpdateCharacter(int id, string name, string rarity, string birthday,
+           string allegiance, string element, string image, string description)
+        {
+            CharacterModel data = new CharacterModel()
+            {
+                Id = id,
+                Name = name,
+                Rarity = rarity,
+                Birthday = birthday,
+                Allegiance = allegiance,
+                Element = element,
+                Image = image,
+                Description = description
+            };
+            //Name, Rarity, Birthday, Allegiance, Element, Image, Description
+            string sql = $"Update dbo.CharacterTable " +
+                $"Set Name = @Name, Rarity = @Rarity, Birthday = @Birthday, Allegiance = @Allegiance, Element = @Element, Image = @Image, Description = @Description " +
+                $"Where Id = @Id;";
+                
+
+            return SQLDataAccess.UpdateData<CharacterModel>(sql, data);
+        }
     }
 }
 

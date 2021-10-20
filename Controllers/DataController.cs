@@ -56,6 +56,22 @@ namespace ReactNetAPI.Controllers
             return new JsonResult("Successfully Deleted!");
         }
 
+        [HttpPut]
+        public JsonResult Put(CharacterModel cm)
+        {
+            DataProcessor.UpdateCharacter(
+                cm.Id,
+                cm.Name,
+                cm.Rarity,
+                cm.Birthday,
+                cm.Allegiance,
+                cm.Element,
+                cm.Image,
+                cm.Description
+            );
+            return new JsonResult("Update Successfully");
+        }
+
 
     }
 }
