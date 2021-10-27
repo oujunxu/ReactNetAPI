@@ -1,16 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
 
 namespace ReactNetAPI
 {
@@ -31,20 +32,19 @@ namespace ReactNetAPI
             //requested from another domain outside the domain from which the first resource was served
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod()
-                .AllowAnyHeader());
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod()
+                 .AllowAnyHeader());
             });
 
             //JSON Serialization
             services.AddControllersWithViews()
-                .AddNewtonsoftJson(option => option
-                .SerializerSettings
-                .ReferenceLoopHandling = Newtonsoft
-                .Json.ReferenceLoopHandling
-                .Ignore).AddNewtonsoftJson(option => option
-                .SerializerSettings.ContractResolver = new DefaultContractResolver());
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft
+                .Json.ReferenceLoopHandling.Ignore)
+                .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver
+                = new DefaultContractResolver());
 
-           
+
             services.AddControllers();
         }
 
@@ -55,6 +55,9 @@ namespace ReactNetAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(Options => Options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 
             app.UseHttpsRedirection();
 

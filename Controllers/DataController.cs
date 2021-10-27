@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using ReactNetAPI.Model;
 using ReactNetAPI.Data.Model;
 using ReactNetAPI.Data.DataAccess;
+using System.Data;
 
 namespace ReactNetAPI.Controllers
 {
@@ -38,12 +39,13 @@ namespace ReactNetAPI.Controllers
 
         [HttpGet]
         public JsonResult Get() {
-            return new JsonResult(DataProcessor.GetAllCharacter<CharacterModel>(GetConnectionString()));
+            List<CharacterModel> cList = DataProcessor.GetAllCharacter<CharacterModel>(GetConnectionString());
+            return new JsonResult(cList.ToArray());
         }
 
         [Route("GetNew")]
         public JsonResult GetNew()
-        {
+        {      
             return new JsonResult(DataProcessor.GetLatestCharacter<CharacterModel>(GetConnectionString()));
         }
 
