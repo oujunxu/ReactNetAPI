@@ -31,16 +31,18 @@ namespace ReactNetAPI
             //requested from another domain outside the domain from which the first resource was served
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod()
+                c.AddPolicy("AllowOrigin", option => option.AllowAnyOrigin().AllowAnyMethod()
                 .AllowAnyHeader());
             });
 
             //JSON Serialization
-            services.AddControllersWithViews().AddNewtonsoftJson(option => option
-            .SerializerSettings
-            .ReferenceLoopHandling = Newtonsoft
-            .Json.ReferenceLoopHandling
-            .Ignore).AddNewtonsoftJson(option => option.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(option => option
+                .SerializerSettings
+                .ReferenceLoopHandling = Newtonsoft
+                .Json.ReferenceLoopHandling
+                .Ignore).AddNewtonsoftJson(option => option
+                .SerializerSettings.ContractResolver = new DefaultContractResolver());
 
            
             services.AddControllers();

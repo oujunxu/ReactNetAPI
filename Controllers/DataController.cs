@@ -9,9 +9,15 @@ using ReactNetAPI.Data.BusinessLogic;
 using System.Data.SqlClient;
 using ReactNetAPI.Model;
 using ReactNetAPI.Data.Model;
+using ReactNetAPI.Data.DataAccess;
 
 namespace ReactNetAPI.Controllers
 {
+    /// <summary>
+    /// Author Oujun
+    /// Class used as a flow controller of data.
+    /// </summary>
+
     [Route("api/[controller]")]
     [ApiController]
     public class DataController : ControllerBase
@@ -29,9 +35,16 @@ namespace ReactNetAPI.Controllers
             return sqlDataSource;
         }
 
+
         [HttpGet]
         public JsonResult Get() {
-            return new JsonResult(DataProcessor.GetAllCharacter());
+            return new JsonResult(DataProcessor.GetAllCharacter<CharacterModel>(GetConnectionString()));
+        }
+
+        [Route("GetNew")]
+        public JsonResult GetNew()
+        {
+            return new JsonResult(DataProcessor.GetLatestCharacter<CharacterModel>(GetConnectionString()));
         }
 
         [HttpPost]
@@ -44,7 +57,9 @@ namespace ReactNetAPI.Controllers
                 cm.Allegiance,
                 cm.Element,
                 cm.Image,
-                cm.Description
+                cm.Description,
+                GetConnectionString()
+                
             );
             return new JsonResult("Added Successfully");
         }
@@ -52,7 +67,7 @@ namespace ReactNetAPI.Controllers
         [HttpDelete]
         public JsonResult Delete(DeleteModel cm)
         {
-            DataProcessor.DeleteCharacter(cm.Id);
+            DataProcessor.DeleteCharacter<CharacterModel>(cm.Id, GetConnectionString());
             return new JsonResult("Successfully Deleted!");
         }
 
@@ -67,7 +82,8 @@ namespace ReactNetAPI.Controllers
                 cm.Allegiance,
                 cm.Element,
                 cm.Image,
-                cm.Description
+                cm.Description,
+                GetConnectionString()
             );
             return new JsonResult("Update Successfully");
         }

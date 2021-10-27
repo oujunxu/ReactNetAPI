@@ -2,13 +2,14 @@
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using ReactNetAPI.Data.DataAccess;
+using System.Data;
 
 namespace ReactNetAPI.Data.BusinessLogic
 {
     public class DataProcessor
     {
         public static int CreateCharacter(string name, string rarity, string birthday,
-           string allegiance, string element, string image, string description)
+           string allegiance, string element, string image, string description, string connectionString)
         {
             CharacterModel data = new CharacterModel()
             {
@@ -24,35 +25,35 @@ namespace ReactNetAPI.Data.BusinessLogic
             string sql = @"insert into dbo.CharacterTable (Name, Rarity, Birthday, Allegiance, Element, Image, Description)
                            values (@Name, @Rarity, @Birthday, @Allegiance, @Element, @Image, @Description);";
 
-            return SQLDataAccess.SaveData(sql, data);
+            return SQLDataAccess.SaveData(sql, data, connectionString);
 
         }
 
-        public static List<CharacterModel> GetAllCharacter()
+        public static List<T> GetAllCharacter<T>(string connectionString)
         {
             string sql = @"select * from dbo.CharacterTable;";
 
-            return SQLDataAccess.LoadData<CharacterModel>(sql);
+            return SQLDataAccess.LoadData<T>(sql, connectionString);
         }
 
-        public static List<CharacterModel> GetLatestCharacter()
+        public static List<T> GetLatestCharacter<T>(string connectionString)
         {
-            string sql = "Select Name, Rarity, Allegiance, Element, Image, Description " +
+            string sql = "Select * " +
                             "from dbo.NewlyReleasedCharacter " +
                             "Where Name in ('Raiden Shogun', 'Yoimiya')";
 
-            return SQLDataAccess.LoadData<CharacterModel>(sql);
+            return SQLDataAccess.LoadData<T>(sql, connectionString);
         }
 
-        public static List<CharacterModel> DeleteCharacter(int id)
+        public static List<T> DeleteCharacter<T>(int id, string connectionString)
         {
             string sql = "Delete from dbo.CharacterTable " + "Where Id =" + id;
 
-            return SQLDataAccess.LoadData<CharacterModel>(sql);
+            return SQLDataAccess.LoadData<T>(sql, connectionString);
         }
 
         public static List<CharacterModel> UpdateCharacter(int id, string name, string rarity, string birthday,
-           string allegiance, string element, string image, string description)
+           string allegiance, string element, string image, string description, string connectionString)
         {
             CharacterModel data = new CharacterModel()
             {
@@ -71,7 +72,7 @@ namespace ReactNetAPI.Data.BusinessLogic
                 $"Where Id = @Id;";
                 
 
-            return SQLDataAccess.UpdateData<CharacterModel>(sql, data);
+            return SQLDataAccess.UpdateData<CharacterModel>(sql, data, connectionString);
         }
     }
 }
